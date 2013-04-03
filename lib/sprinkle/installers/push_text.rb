@@ -53,9 +53,9 @@ module Sprinkle
           logger.info "--> Append '#{@text}' to file #{@path}"
           escaped_text = @text.gsub("'", "'\\\\''").gsub("\n", '\n')
           command = ""
-          command << "grep -Pzo '#{escaped_text.gsub(/([\[\]\(\)\$\{\}])/, '\\\\\1')}' #{@path} || " if option?(:idempotent)
+          command << "grep -qPzo '#{escaped_text.gsub(/([\[\]\(\)\$\{\}])/, '\\\\\1')}' #{@path} || " if option?(:idempotent)
           command << "/bin/echo -e '#{escaped_text}' | tee -a #{@path}"
-          command
+          "sh -c '#{command.gsub("'", "'\\\\''")}'"
         end
     end
   end
