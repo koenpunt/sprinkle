@@ -1,4 +1,5 @@
 require 'capistrano/cli'
+require 'securerandom'
 
 module Sprinkle
   module Actors
@@ -100,7 +101,7 @@ module Sprinkle
         end
         run_task(name, opts)
       end
-			
+
       private
             
         def raise_error(e)
