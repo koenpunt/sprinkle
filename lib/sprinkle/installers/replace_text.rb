@@ -37,7 +37,9 @@ module Sprinkle
 
         def install_commands #:nodoc:
           logger.info "--> Replace '#{@regex}' with '#{@text}' in file #{@path}"
-          "#{'sudo ' if option?(:sudo)}sed -i 's/#{@regex.gsub("'", "'\\\\''").gsub("/", "\\\\/").gsub("\n", '\n')}/#{@text.gsub("'", "'\\\\''").gsub("/", "\\\\/").gsub("\n", '\n')}/g' #{@path}"
+          escaped_regex = @regex.gsub("'", "'\\\\''").gsub("/", "\\\\/").gsub("\n", '\n')
+          escaped_text = @text.gsub("'", "'\\\\''").gsub("/", "\\\\/").gsub("\n", '\n')
+          "sed -i 's/#{escaped_regex}/#{escaped_text}/g' #{@path}"
         end
 
     end
