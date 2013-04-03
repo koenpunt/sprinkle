@@ -37,9 +37,13 @@ module Sprinkle
       protected
 
         def install_commands #:nodoc:
-          "#{"#{'sudo ' if option?(:sudo)}grep \"^#{@text.gsub("'", "'\\\\''").gsub("\n", '\n')}$\" #{@path} ||" if option?(:idempotent) }/bin/echo -e '#{@text.gsub("'", "'\\\\''").gsub("\n", '\n')}' |#{'sudo ' if option?(:sudo)}tee -a #{@path}"
+          logger.info "--> Append '#{@text}' to file #{@path}"
+          escaped_text = @text.gsub("'", "'\\\\''").gsub("\n", '\n')
+          command = ""
+          command << "grep -Pzo '#{escaped_text.gsub(/([\[\]\(\)\$\{\}])/, '\\\\\1')}' #{@path} || " if option?(:idempotent)
+          command << "/bin/echo -e '#{escaped_text}' | tee -a #{@path}"
+          command
         end
-
     end
   end
 end
